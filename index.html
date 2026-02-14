@@ -1,0 +1,107 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Tiny Valentine Surprise</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <span class="spark s1"></span>
+    <span class="spark s2"></span>
+    <span class="spark s3"></span>
+    <span class="spark s4"></span>
+    <span class="spark s5"></span>
+  </div>
+
+  <main class="site-main">
+    <section class="landing" id="landing" aria-labelledby="landing-title">
+      <article class="intro-card" id="introCard">
+        <h1 id="landing-title">Hey cutie, I made you something.</h1>
+        <p>Soft warning: it might be a little too wholesome.</p>
+        <button id="openSurprise" class="btn btn-primary">Open your surprise</button>
+      </article>
+    </section>
+
+    <section class="surprise" id="surprise" aria-labelledby="note-title" hidden>
+      <div class="surprise-wrap">
+        <figure class="bouquet" id="bouquet" aria-label="Bouquet of sunflowers and white roses">
+          <div class="stems" aria-hidden="true">
+            <span class="stem stem-1"></span>
+            <span class="stem stem-2"></span>
+            <span class="stem stem-3"></span>
+            <span class="stem stem-4"></span>
+            <span class="stem stem-5"></span>
+            <span class="stem stem-6"></span>
+            <span class="stem stem-7"></span>
+            <span class="stem stem-8"></span>
+          </div>
+
+          <div class="flowers" aria-hidden="true">
+            <div class="flower sunflower sf-1 bloom-seq" style="--delay: .1s">
+              <span class="petals"></span><span class="core"></span>
+            </div>
+            <div class="flower sunflower sf-2 bloom-seq" style="--delay: .35s">
+              <span class="petals"></span><span class="core"></span>
+            </div>
+            <div class="flower sunflower sf-3 bloom-seq" style="--delay: .6s">
+              <span class="petals"></span><span class="core"></span>
+            </div>
+            <div class="flower sunflower sf-4 bloom-seq" style="--delay: .85s">
+              <span class="petals"></span><span class="core"></span>
+            </div>
+            <div class="flower sunflower sf-5 bloom-seq" style="--delay: 1.1s">
+              <span class="petals"></span><span class="core"></span>
+            </div>
+
+            <div class="flower rose r-1 bloom-seq" style="--delay: 1.35s">
+              <span class="layer l1"></span><span class="layer l2"></span><span class="layer l3"></span>
+            </div>
+            <div class="flower rose r-2 bloom-seq" style="--delay: 1.6s">
+              <span class="layer l1"></span><span class="layer l2"></span><span class="layer l3"></span>
+            </div>
+            <div class="flower rose r-3 bloom-seq" style="--delay: 1.85s">
+              <span class="layer l1"></span><span class="layer l2"></span><span class="layer l3"></span>
+            </div>
+          </div>
+
+          <div class="wrap" aria-hidden="true">
+            <div class="paper left"></div>
+            <div class="paper right"></div>
+            <div class="ribbon"></div>
+            <div class="knot"></div>
+            <div class="bouquet-tag">
+              <span>(because you dont like roses)</span>
+            </div>
+            <div class="tag-string"></div>
+          </div>
+        </figure>
+
+        <article class="note-card" aria-labelledby="note-title">
+          <h2 id="note-title">Little note</h2>
+          <p>Hey cutie, this is your tiny Valentine page.</p>
+          <p>Belong really did one thing right and that was introducing us.</p>
+          <p>You are stupid cute, and yes that is a compliment.</p>
+          <p>I made this bouquet to make you smile for no reason.</p>
+          <p>Keep being your sweet, slightly chaotic self.</p>
+          <p>Now accept this and pretend you are not blushing.</p>
+          <p class="signature">From: Moiz</p>
+
+          <div class="actions" role="group" aria-label="Cute reactions">
+            <button class="btn" id="smilesBtn">Smiles</button>
+            <button class="btn" id="blushBtn">Blush</button>
+            <button class="sound-toggle" id="soundToggle" aria-pressed="false" aria-label="Enable click sounds" title="Toggle click sounds">
+              <span aria-hidden="true">♪</span>
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <div class="float-layer" id="floatLayer" aria-hidden="true"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
