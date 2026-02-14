@@ -1,128 +1,88 @@
-﻿const landing = document.getElementById("landing");
-const surprise = document.getElementById("surprise");
-const openBtn = document.getElementById("openSurprise");
-const smilesBtn = document.getElementById("smilesBtn");
-const blushBtn = document.getElementById("blushBtn");
-const bouquet = document.getElementById("bouquet");
-const floatLayer = document.getElementById("floatLayer");
-const soundToggle = document.getElementById("soundToggle");
+document.addEventListener("DOMContentLoaded", () => {
+  const landing = document.getElementById("landing");
+  const surprise = document.getElementById("surprise");
+  const openBtn = document.getElementById("openSurprise");
+  const bouquet = document.getElementById("bouquet");
+  const floatLayer = document.getElementById("floatLayer");
 
-let soundEnabled = false;
-let audioCtx;
+  const HEART = "\u2764";
+  const STAR = "\u2726";
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-function initAudio() {
-  if (!audioCtx) {
-    const AC = window.AudioContext || window.webkitAudioContext;
-    if (AC) audioCtx = new AC();
-  }
-}
-
-function playPop() {
-  if (!soundEnabled || !audioCtx) return;
-  if (audioCtx.state === "suspended") {
-    audioCtx.resume();
+  function spawnHeart(x, y, symbol = HEART) {
+    if (!floatLayer) return;
+    const el = document.createElement("span");
+    el.className = "float-heart";
+    el.textContent = symbol;
+    el.style.left = `${x}px`;
+    el.style.top = `${y}px`;
+    el.style.fontSize = `${12 + Math.random() * 12}px`;
+    el.style.animationDuration = `${1800 + Math.random() * 1400}ms`;
+    floatLayer.appendChild(el);
+    window.setTimeout(() => el.remove(), 3200);
   }
 
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
+  function burstAtElement(originEl, forMs = 1600) {
+    if (!originEl) return;
+    const rect = originEl.getBoundingClientRect();
+    const start = performance.now();
 
-  osc.type = "triangle";
-  osc.frequency.setValueAtTime(460, audioCtx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(210, audioCtx.currentTime + 0.08);
+    const id = window.setInterval(() => {
+      const now = performance.now();
+      if (now - start > forMs) {
+        window.clearInterval(id);
+        return;
+      }
 
-  gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 0.01);
-  gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.12);
+      for (let i = 0; i < 4; i += 1) {
+        const x = rect.left + rect.width * (0.1 + Math.random() * 0.8);
+        const y = rect.top + rect.height * (0.25 + Math.random() * 0.55);
+        const symbol = Math.random() > 0.35 ? HEART : STAR;
+        spawnHeart(x, y, symbol);
+      }
+    }, 120);
+  }
 
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  osc.start();
-  osc.stop(audioCtx.currentTime + 0.13);
-}
+  function gentleFloatingHearts() {
+    if (prefersReduced) return;
+    window.setInterval(() => {
+      if (!surprise || surprise.hidden) return;
+      const x = window.innerWidth * (0.14 + Math.random() * 0.72);
+      const y = window.innerHeight * (0.62 + Math.random() * 0.22);
+      spawnHeart(x, y, HEART);
+    }, 1400);
+  }
 
-function spawnHeart(x, y, symbol = "❤") {
-  const heart = document.createElement("span");
-  heart.className = "float-heart";
-  heart.textContent = symbol;
-  heart.style.left = `${x}px`;
-  heart.style.top = `${y}px`;
-  heart.style.fontSize = `${12 + Math.random() * 11}px`;
-  heart.style.animationDuration = `${1800 + Math.random() * 1400}ms`;
-  floatLayer.appendChild(heart);
+  function focusBouquet() {
+    if (!bouquet) return;
+    bouquet.scrollIntoView({
+      behavior: prefersReduced ? "auto" : "smooth",
+      block: "center"
+    });
 
-  window.setTimeout(() => heart.remove(), 3200);
-}
+    bouquet.classList.remove("wiggle");
+    bouquet.classList.remove("spotlight");
+    void bouquet.offsetWidth;
+    bouquet.classList.add("wiggle");
+    bouquet.classList.add("spotlight");
+    burstAtElement(bouquet, 1600);
 
-function heartBurst(originEl, forMs = 2000) {
-  const rect = originEl.getBoundingClientRect();
-  const start = performance.now();
+    window.setTimeout(() => {
+      bouquet.classList.remove("spotlight");
+    }, 1700);
+  }
 
-  const id = window.setInterval(() => {
-    const now = performance.now();
-    if (now - start > forMs) {
-      window.clearInterval(id);
-      return;
-    }
+  if (openBtn && landing && surprise) {
+    openBtn.addEventListener("click", () => {
+      landing.classList.add("leave");
+      window.setTimeout(() => {
+        landing.hidden = true;
+        surprise.hidden = false;
+        document.body.classList.add("show-surprise");
+        focusBouquet();
+      }, prefersReduced ? 10 : 620);
+    });
+  }
 
-    for (let i = 0; i < 4; i += 1) {
-      const x = rect.left + rect.width * (0.15 + Math.random() * 0.7);
-      const y = rect.top + rect.height * (0.35 + Math.random() * 0.5);
-      const symbol = Math.random() > 0.4 ? "❤" : "✦";
-      spawnHeart(x, y, symbol);
-    }
-  }, 120);
-}
-
-function gentleFloatingHearts() {
-  if (prefersReduced) return;
-  window.setInterval(() => {
-    if (surprise.hidden) return;
-    const x = window.innerWidth * (0.12 + Math.random() * 0.76);
-    const y = window.innerHeight * (0.6 + Math.random() * 0.26);
-    spawnHeart(x, y, "❤");
-  }, 1400);
-}
-
-openBtn.addEventListener("click", () => {
-  playPop();
-  landing.classList.add("leave");
-
-  window.setTimeout(() => {
-    landing.hidden = true;
-    surprise.hidden = false;
-    document.body.classList.add("show-surprise");
-    smilesBtn.focus();
-  }, prefersReduced ? 10 : 620);
+  gentleFloatingHearts();
 });
-
-smilesBtn.addEventListener("click", () => {
-  playPop();
-  heartBurst(smilesBtn, 2000);
-});
-
-blushBtn.addEventListener("click", () => {
-  playPop();
-  document.body.classList.add("blush");
-  bouquet.classList.remove("wiggle");
-  void bouquet.offsetWidth;
-  bouquet.classList.add("wiggle");
-
-  window.setTimeout(() => {
-    document.body.classList.remove("blush");
-  }, 2200);
-});
-
-soundToggle.addEventListener("click", () => {
-  initAudio();
-  soundEnabled = !soundEnabled;
-  soundToggle.setAttribute("aria-pressed", String(soundEnabled));
-  soundToggle.setAttribute(
-    "aria-label",
-    soundEnabled ? "Disable click sounds" : "Enable click sounds"
-  );
-  if (soundEnabled) playPop();
-});
-
-gentleFloatingHearts();
